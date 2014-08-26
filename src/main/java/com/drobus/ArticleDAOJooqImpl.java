@@ -11,7 +11,7 @@ public class ArticleDAOJooqImpl implements ArticleDAO {
     private DSLContext dsl;
     
     
-    public Article get(long id) {
+    public Article get(int id) {
         // TODO Auto-generated method stub
         return null;
     }
