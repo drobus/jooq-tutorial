@@ -2,7 +2,7 @@ package com.drobus;
 
 public interface UserDAO {
     
-    public User get(long id);
+    public User get(int id);
     
     public void create(User user);
     

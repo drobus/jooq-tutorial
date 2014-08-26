@@ -78,13 +78,11 @@
   </bean>
     
 
-  <!--  
   <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
     <property name="dataSource" ref="datasource" />
     <property name="changeLog" value="classpath:changelog/changelog.xml" />
     <property name="contexts" value="test" />
     <property name="dropFirst" value="true" />
   </bean>
-  -->
 
 </beans>

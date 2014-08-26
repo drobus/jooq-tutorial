@@ -2,7 +2,7 @@ package com.drobus;
 
 public interface ArticleDAO {
     
-    Article get(long id);
+    Article get(int id);
     
     void create(Article article);
     
