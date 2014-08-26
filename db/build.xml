@@ -1,0 +1,80 @@
+<project name="HSLDB Runner" basedir="." default="startdb" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <property environment="env" />
+
+  <typedef uri="urn:maven-artifact-ant" resource="org/apache/maven/artifact/ant/antlib.xml" />
+
+  <property file="build.properties" />
+
+  <target name="init">
+    <property name="project.pom.location" value="../pom.xml" />
+    <artifact:pom id="project.pom" file="${project.pom.location}" />
+
+    <artifact:dependencies pathId="classpath" scopes="runtime,compile,test">
+      <pom refid="project.pom" />
+    </artifact:dependencies>
+
+    <taskdef resource="liquibasetasks.properties">
+      <classpath refid="classpath" />
+    </taskdef>
+
+  </target>
+
+  <!-- Start the HSQL DB server -->
+  <target name="startdb" depends="init" description="Run HSQL database server with clean DB">
+    <!-- Delete database files -->
+    <delete dir="temp" />
+    <java classname="org.hsqldb.Server" fork="yes" classpathref="classpath" failonerror="true">
+      <arg value="--database.0" />
+      <arg value="file:temp/db" />
+      <arg value="--dbname.0" />
+      <arg value="db"/>
+    </java>
+  </target>
+
+
+  <!-- Stop the HSQL DB server -->
+  <target name="stopdb" depends="init" description="Stop HSQL database server">
+    <sql driver="${database.driver}" url="${database.url}" userid="${database.username}" password="" onerror="continue">
+      <classpath refid="classpath" />
+          SHUTDOWN;
+    </sql>
+  </target>
+
+  <target name="updatedb" depends="init">
+    
+    <dropAllDatabaseObjects 
+            driver="${database.driver}"
+            url="${database.url}"
+            username="${database.username}"
+            password="${database.password}"
+            classpathref="classpath"
+            />    
+    <updateDatabase
+            changeLogFile="resources/changelog.xml"
+            driver="${database.driver}"
+            url="${database.url}"
+            username="${database.username}"
+            password="${database.password}"
+            dropFirst="false"
+            classpathref="classpath"
+    />    
+    
+  </target>
+
+  <target name="restart">
+    <antcall target="stopdb"/>
+    <antcall target="startdb"/>
+  </target>
+
+
+  <target name="start-manager" depends="init" description="Start HSQL DB manager">
+    <java classname="org.hsqldb.util.DatabaseManagerSwing" fork="yes" classpathref="classpath" failonerror="true">
+      <arg value="-url" />
+      <arg value="${database.url}" />
+      <arg value="-driver" />
+      <arg value="${database.driver}" />
+    </java>
+  </target>
+
+</project>
