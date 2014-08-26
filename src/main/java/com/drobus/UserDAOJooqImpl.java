@@ -1,9 +1,14 @@
 package com.drobus;
 
+import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserDAOJooqImpl implements UserDAO{
+
+    @Autowired
+    private DSLContext dsl;
 
     public User get(long id) {
         // TODO Auto-generated method stub
